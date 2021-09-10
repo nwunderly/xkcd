@@ -5,7 +5,8 @@ import {
   InteractionResponseType,
   APIInteractionResponse as InteractionResponse,
   APIApplicationCommandInteraction as Interaction,
-  APIApplicationCommandInteractionData as InteractionData
+  APIApplicationCommandInteractionData as InteractionData,
+  ApplicationCommandOptionType
 } from 'discord-api-types/v9'
 
 import { APIPingInteraction } from 'discord-api-types/payloads/v9/_interactions/ping'
@@ -18,7 +19,7 @@ import { APIPingInteraction } from 'discord-api-types/payloads/v9/_interactions/
 const commands = [
   { name: 'test', func: test },
   { name: 'invite', func: invite },
-  { name: 'invite', func: xkcd },
+  { name: 'xkcd', func: xkcd },
 ]
 
 async function test(command: InteractionData) {
@@ -35,7 +36,12 @@ async function invite(command: InteractionData) {
 async function xkcd(command: InteractionData) {
   let comic = ''
   if (command.options) {
-    comic = command.options[0].toString() + '/'
+    let option = command.options[0]
+    if (option.type == ApplicationCommandOptionType.Integer) {
+      comic = String(option.value) + '/'
+    } else {
+      return respond('invalid option type ' + String(option.type))
+    }
   }
   return respond('https://xkcd.com/' + comic)
 }
@@ -64,9 +70,10 @@ export async function handleRequest(request: Request): Promise<Response> {
 }
 
 async function respondToCommand(command: InteractionData) {
-  for (let i in commands) {
-    let func = commands[i].func
-    return func(command)
+  for (let cmd of commands) {
+    if (cmd.name === command.name) {
+      return cmd.func(command)
+    }
   }
   return respondEphemeral('Command not found: ' + command.name)
 }
