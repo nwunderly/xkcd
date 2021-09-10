@@ -1,6 +1,6 @@
-name = "discord-interactions-worker-ts"
+name = "xkcd"
 type = "javascript"
-account_id = ""
+account_id = "ACCOUNT_ID"
 zone_id = ""
 route = ""
 workers_dev = true
