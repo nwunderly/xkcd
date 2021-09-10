@@ -1,4 +1,5 @@
 import { verify } from './verify'
+import { searchExplainxkcd } from "./api";
 
 import {
   InteractionType,
@@ -18,8 +19,10 @@ import { APIPingInteraction } from 'discord-api-types/payloads/v9/_interactions/
 
 const commands = [
   { name: 'test', func: test },
+  { name: 'searchtest', func: search },
   { name: 'invite', func: invite },
   { name: 'xkcd', func: xkcd },
+  { name: 'search', func: search },
 ]
 
 async function test(command: InteractionData) {
@@ -38,13 +41,25 @@ async function xkcd(command: InteractionData) {
   if (command.options) {
     let option = command.options[0]
     if (option.type == ApplicationCommandOptionType.Integer) {
-      comic = String(option.value) + '/'
+      comic = String(option.value)
     } else {
-      return respond('invalid option type ' + String(option.type))
+      return respond(`invalid option type ${String(option.type)}`)
     }
   }
-  return respond('https://xkcd.com/' + comic)
+  return respond(`https://xkcd.com/${comic}/`)
 }
+
+async function search(command: InteractionData) {
+  if (command.options) {
+    let option = command.options[0]
+    if (option.type == ApplicationCommandOptionType.String) {
+      let results = await searchExplainxkcd(option.value)
+      return respond(results)
+    } else {
+      return respond(`invalid option type ${String(option.type)}`)
+    }
+  }
+  return respond('something went wrong.')}
 
 
 /*****************\
