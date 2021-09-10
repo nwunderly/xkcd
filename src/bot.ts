@@ -15,27 +15,27 @@ import { APIPingInteraction } from 'discord-api-types/payloads/v9/_interactions/
 * Commands *
 \***********/
 
-const commands = {
-  'test': test,
-  'invite': invite,
-  'xkcd': xkcd,
-}
+const commands = [
+  { name: 'test', func: test },
+  { name: 'invite', func: invite },
+  { name: 'invite', func: xkcd },
+]
 
-async function test(_) {
+async function test(command: InteractionData) {
   return respondEphemeral('Hello from Cloudflare workers and TypeScript!')
 }
 
-async function invite(_) {
+async function invite(command: InteractionData) {
   return respondEphemeral(
       '[Invite me to your server!](https://discord.com/api/oauth2/authorize' +
       '?client_id=884864200374124624&scope=applications.commands)'
   )
 }
 
-async function xkcd(command) {
+async function xkcd(command: InteractionData) {
   let comic = ''
-  if ('options' in command) {
-    comic = String(command.options[0].value) + '/'
+  if (command.options) {
+    comic = command.options[0].toString() + '/'
   }
   return respond('https://xkcd.com/' + comic)
 }
@@ -64,11 +64,11 @@ export async function handleRequest(request: Request): Promise<Response> {
 }
 
 async function respondToCommand(command: InteractionData) {
-  if (command.name in commands) {
-    return commands[command.name](command)
-  } else {
-    return respondEphemeral('Command not found: ' + command.name)
+  for (let i in commands) {
+    let func = commands[i].func
+    return func(command)
   }
+  return respondEphemeral('Command not found: ' + command.name)
 }
 
 
