@@ -2,7 +2,7 @@
 
 'use strict';
 
-const publicKey = ''
+import { publicKey } from './secrets'
 
 function hex2bin(hex: string) {
   const buf = new Uint8Array(Math.ceil(hex.length / 2));
