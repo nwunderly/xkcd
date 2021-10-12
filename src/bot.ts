@@ -68,7 +68,7 @@ async function search(command: InteractionData) {
 
 export async function handleRequest(request: Request): Promise<Response> {
   if (!request.headers.get('X-Signature-Ed25519') || !request.headers.get('X-Signature-Timestamp'))
-    return Response.redirect('https://nwunder.com')
+    return Response.redirect('https://github.com/nwunderly/xkcd-bot')
   if (!await verify(request)) return new Response('', {status: 401})
 
   const interaction = await request.json() as APIPingInteraction | Interaction
