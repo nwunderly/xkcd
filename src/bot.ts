@@ -30,7 +30,7 @@ async function test(command: InteractionData) {
 }
 
 async function invite(command: InteractionData) {
-  return respondEphemeral(
+  return respond(
       '[Invite me to your server!](https://discord.com/api/oauth2/authorize' +
       '?client_id=884864200374124624&scope=applications.commands)'
   )
