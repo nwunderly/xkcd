@@ -41,12 +41,12 @@ async function xkcd(command: InteractionData) {
   if (command.options) {
     let option = command.options[0]
     if (option.type == ApplicationCommandOptionType.Integer) {
-      comic = String(option.value)
+      comic = String(option.value) + '/'
     } else {
       return respond(`invalid option type ${String(option.type)}`)
     }
   }
-  return respond(`https://xkcd.com/${comic}/`)
+  return respond(`https://xkcd.com/${comic}`)
 }
 
 async function search(command: InteractionData) {
